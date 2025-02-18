@@ -1,12 +1,12 @@
 use std::{iter::once, ops::AddAssign};
 
-#[derive(Debug)]
-pub struct FenwickTree<T: AddAssign + Default + Copy> {
+#[derive(Debug, Clone)]
+pub struct FenwickTree<T: AddAssign + Default + Copy + PartialEq> {
     tree: Vec<T>,
 }
 
 // Tree is zero-indexed
-impl<T: AddAssign + Default + Copy> FenwickTree<T> {
+impl<T: AddAssign + Default + Copy + PartialEq> FenwickTree<T> {
     pub fn new(v: Vec<T>) -> Self {
         let mut tree: Vec<T> = once(T::default()).chain(v).collect();
 
@@ -35,11 +35,36 @@ impl<T: AddAssign + Default + Copy> FenwickTree<T> {
         let mut sum = T::default();
 
         while idx > 0 {
-            sum = self.tree[idx];
+            sum += self.tree[idx];
             idx -= idx & (!idx + 1);
         }
 
         sum
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.tree.is_empty()
+    }
+
+    // Maintain zero-index from outside
+    pub fn len(&self) -> usize {
+        if self.is_empty() {
+            0
+        } else {
+            self.tree.len() - 1
+        }
+    }
+}
+
+impl<T: AddAssign + Default + Copy + PartialEq> PartialEq<Vec<T>> for FenwickTree<T> {
+    fn eq(&self, other: &Vec<T>) -> bool {
+        self.tree[1..] == *other
+    }
+}
+
+impl<T: AddAssign + Default + Copy + PartialEq> PartialEq for FenwickTree<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.tree == other.tree
     }
 }
 
@@ -51,7 +76,9 @@ mod test {
     fn test_fenwick_construction() {
         let x = vec![1, 3, 4, 8, 6, 1, 4, 2];
         let fenwick_tree = FenwickTree::new(x);
+        let tree2 = fenwick_tree.clone();
 
-        assert_eq!(fenwick_tree.tree, vec![0, 1, 4, 4, 16, 6, 7, 4, 29]);
+        assert_eq!(fenwick_tree, vec![1, 4, 4, 16, 6, 7, 4, 29]);
+        assert_eq!(fenwick_tree, tree2);
     }
 }
