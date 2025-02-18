@@ -81,4 +81,12 @@ mod test {
         assert_eq!(fenwick_tree, vec![1, 4, 4, 16, 6, 7, 4, 29]);
         assert_eq!(fenwick_tree, tree2);
     }
+
+    #[test]
+    fn test_fenwick_sum() {
+        let x = vec![1, 3, 4, 8, 6, 1, 4, 2];
+        let fenwick_tree = FenwickTree::new(x);
+
+        assert_eq!(fenwick_tree.sum(6), 27);
+    }
 }
