@@ -10,7 +10,6 @@ pub fn sieve(n: usize) -> Vec<usize> {
         if is_prime[i] {
             let mut j = i * i;
             while j <= n {
-                println!("{j:?}");
                 is_prime[j] = false;
                 j += i;
             }
