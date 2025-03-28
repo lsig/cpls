@@ -173,7 +173,7 @@ mod tests {
     #[test]
     fn test_new_zero_size() {
         // Test creating a UnionFind with size 0
-        let mut uf = UnionFind::new(0);
+        let uf = UnionFind::new(0);
         // We can't really call find_set or union_set, but new() shouldn't panic
         assert!(uf.parent.is_empty());
         assert!(uf.size.is_empty());
